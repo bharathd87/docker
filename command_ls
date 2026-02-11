@@ -1,0 +1,132 @@
+docker build -t tomcat_image:1.0 -f docker_file  .  -------used to create docker image
+docker run -itd -p 8888:8080 tomcat:jre8-alpine     -------used to create docker container
+docker run -id --name tomcat_war -p 8090:8080 multisatge_docker:2.0  
+docker images  -------used to list all images
+docker ps      -------used to list running container
+docker ps -a   -------used to list running + stopped container
+docker rmi image_id or image_name -------used to remove image  
+docker rm -f conatinername/conatinerID  -------used to remove container
+docker exec -it 60f8b91979f1 /bin/sh  -------used to enter inside a running Docker container
+docker commit tomcat_war docker_commit_image:1.0  --------used to create from containers 
+
+
+docker stop conatinername/conatinerID -------used to stop container
+docker start conatinername/conatinerID  ------- used to start container
+
+docker pull tomcat:jre8-alpine   --------used to pull image from docker hub
+docker login -u siddeshg672   ------used to login to docker hub
+docker push bharath87/app:tomcat-alpine -------used to push docker image to our account in docker hub
+docker pull bharath87/app:tomcat-alpine  -------used to get docker image to our account in docker hub
+
+Docker inspect imagename/ImageID  -------used to get information about image in json format
+Docker inspect conatinername/conatinerID  -------used to get information about container in json format
+Docker inspect voulumename/volumeID   -------used to get information about volume in json format
+Docker inspect networkname/neteorkid    -------used to get information about network in json format
+
+docker stats tomcat_war    ---get full info of docker container like CPU usage, Memory usage, Network I/O, Block I/O (disk), PIDs
+ 
+
+.dockerignore --------Ignore these files/folders when building the image.
+Dangling images   -------Images that have no tag and are not referenced by any container
+docker images -f dangling=true  -------to list Dangling images
+
+
+docker run -id --name tomcat_war1 -p 8080:8080 --memory "200mb"  multisatge_docker:2.0  ----fixed memory usage for container
+docker run -id --name tomcat_war2 -p 8088:8080 --cpus=1.0  multisatge_docker:2.0    ----fixed cpu usage for container
+docker cp sample.war container_Id:/usr/local/tomcat/webapps/    --------copy file to container
+docker info --used to get info about docker like Total Containers, Total Images, Storage Driver,Docker Root Directory
+
+example for files are in different paths
+Docker file path /home/ubuntu
+War file path /root
+Current path /home 
+Docker build -t image_name:tag_name -f /home/ubuntu/Dockerfile /root
+Context 
+This is the folder where it contains all the dependencies to create the docker image
+
+
+Docker volumes
+
+Bind volumes
+	local created volumes 
+Shared volumes
+	NFS, S3
+
+Bind Mount
+Uses Host Path Directly
+docker run -itd -v /home/ubuntu/app:/data nginx
+
+Now:  /home/ubuntu/app (host folder)
+directly mapped to /data inside container
+
+Bind Mount
+Container
+   ↓
+/home/ubuntu/app   (Host folder directly)
+You control everything.
+
+ 
+
+if we create volumes inside docker 
+Container
+   ↓
+Docker Volume
+   ↓
+/var/lib/docker/volumes/
+Docker controls everything.
+
+path = /var/lib/docker/volumes
+docker volume create my_volume   --------Create volume
+docker volume ls                 -------List volumes
+docker volume inspect my_volume  -------View details
+docker volume rm my_volume       -------Remove volume
+docker volume prune              -------Remove unused volumes
+
+docker run -itd --name tomcat_war -p 8080:8080 -v my_tomcat_data:/usr/local/tomcat/webapps tomcat:9
+
+
+
+Docker networks
+
+1) Bridge(Default network)
+  Default network
+  Used when you run container normally
+  Allows container-to-container communication
+
+ docker network create my_network
+ docker run -d --name app1 --network my_network nginx
+ docker run -d --name app2 --network my_network_2 nginxHost
+
+docker network create -d bridge --subnet 172.18.0.0/16 --gateway 172.18.0.1 test_network
+docker run -id --name tomcat_war2 -p 8800:8080 --network test_network multisatge_docker:2.0
+docker network ls 
+docker network connect test_network nginx
+now from app1 we can ping app2
+
+
+2) Host
+3)Overlay
+4)Ipvlan
+5)Maclan
+6)None
+
+Without network → containers are isolated.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

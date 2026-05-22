@@ -35,6 +35,32 @@ internal port to the host machine’s port so that external
 users can access it. 
 
 
+Docker Architecture
+
+Main components:
+Docker Client
+Docker Daemon
+Docker Registry
+Docker Images
+Docker Containers
+
+Docker Client
+The Docker Client is the command-line interface used by users.
+OR
+where we run docker command are called docker client.
+Docker uses a REST API to communicate between the Docker Client and Docker Daemon.
+Example commands:
+                docker ps ,  docker images    
+The client sends requests to the Docker daemon.
+Communication happens using:
+/var/run/docker.sock
+
+
+Docker Daemon
+The Docker daemon (dockerd) listens for Docker API requests and manages Docker objects such as images, containers, networks, and volumes. 
+A daemon can also communicate with other daemons to manage Docker services. 
+It is also referred to as 'dockerd'
+
 Common Instructions in Dockerfile: 
 • FROM → Base image (e.g., ubuntu, alpine, nginx) 
 • RUN → Run commands (install packages) 
@@ -42,36 +68,6 @@ Common Instructions in Dockerfile:
 • WORKDIR → Set working directory 
 • CMD → Default command to run when container starts 
 • EXPOSE → Inform which port container will use 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 Real-Time Workflow

@@ -1,0 +1,84 @@
+hypervisor
+A hypervisor, also known as a virtual machine monitor or VMM, is software that creates and runs 
+virtual machines (VMs). 
+A hypervisor allows one host computer to support multiple guest VMs by virtually 
+sharing its resources, such as memory and processing
+
+What is Docker? 
+→ Docker is a open-source platform that allows you to 
+build ,ship ,and run applications inside containers. 
+
+Container
+A container is a lightweight, standalone and portable 
+environment that include everything your application 
+needs to run --> like code, runtime, librraies and 
+dependencies. 
+
+with docker, developers can ensure their applications 
+runs the same way everywhere – whether on their laptop, 
+a testing server or in production or in the cloud.
+
+
+In Short  
+• Docker = Platform to create and manage containers. 
+• Container = Small, portable environment to run 
+applications with all dependencies. 
+
+
+Port Mapping 
+→ Every Docker container has its own network namespace 
+(like a mini-computer). 
+→ By default, services inside a container are not accessible 
+from outside the host machine. 
+→ Port Mapping is the process of exposing a container’s 
+internal port to the host machine’s port so that external 
+users can access it. 
+
+
+Common Instructions in Dockerfile: 
+• FROM → Base image (e.g., ubuntu, alpine, nginx) 
+• RUN → Run commands (install packages) 
+• COPY → Copy files from host to image 
+• WORKDIR → Set working directory 
+• CMD → Default command to run when container starts 
+• EXPOSE → Inform which port container will use 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Real-Time Workflow
+Developer Flow
+Developer writes code
+Create Dockerfile
+Build image
+Push image to registry
+CI/CD deploys container
+Kubernetes runs containers

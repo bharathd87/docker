@@ -36,15 +36,21 @@ users can access it.
 
 
 Docker Architecture
+                   Main components:
+                                   1.Docker Host
+                                   2.Docker Client
+                                   3.Docker Daemon
+                                   4.Docker Registry
+                                   5.Docker Images
+                                   6.Docker Containers
+                                   7.Docker Volumes
+                                   8.Docker Network
 
-Main components:
-Docker Client
-Docker Daemon
-Docker Registry
-Docker Images
-Docker Containers
+1.Docker Host
+“Docker Host is the physical machine or virtual machine where Docker Engine (Docker Daemon) is installed and running. 
+It is responsible for hosting Docker images, containers, networks, and volumes.”
 
-Docker Client
+2.Docker Client
 The Docker Client is the command-line interface used by users.
 OR
 where we run docker command are called docker client.
@@ -55,11 +61,30 @@ The client sends requests to the Docker daemon.
 Communication happens using:
 /var/run/docker.sock
 
-
-Docker Daemon
+3.Docker Daemon
 The Docker daemon (dockerd) listens for Docker API requests and manages Docker objects such as images, containers, networks, and volumes. 
 A daemon can also communicate with other daemons to manage Docker services. 
 It is also referred to as 'dockerd'
+
+4.Docker Registry
+Registry stores Docker images.
+Docker is configured to look for images on Docker Hub by default.
+Docker Hub is the public registry that anyone can use
+
+5.Docker Images
+Docker image is a read-only template. and run on docker HOST
+Contains: Application code, Runtime, Libraries, Dependencies
+Created using Dockerfile.
+
+6.Docker Containers
+Containers are running instances of Docker images.
+
+7.Docker Volumes
+Provides persistent storage.
+
+8.Docker Networks
+Handles container communication.
+
 
 Common Instructions in Dockerfile: 
 • FROM → Base image (e.g., ubuntu, alpine, nginx) 

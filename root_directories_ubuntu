@@ -1,0 +1,91 @@
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt
+proc  root  run  sbin  srv  sys  tmp  usr  var
+
+
+
+1️⃣ /bin    
+Contains essential user commands. 
+( Examples commands : ls cp mv cat )
+
+2️⃣ /sbin    
+Contains system administration commands. 
+( Examples: shutdown reboot fdisk )
+
+3️⃣ /boot  
+Contains bootloader and kernel files needed to start Linux.   
+(Examples:  Linux kernel GRUB bootloader)
+
+4️⃣ /dev
+Contains device files.
+In Linux, devices are treated like files.
+( Examples: disks, terminals, USB devices)
+
+5️⃣ /etc
+Contains system configuration files.
+Very important directory.
+( Examples: network configs, passwd files, ssh configs )
+
+6️⃣ /home
+Contains home directories of normal users.
+Example: ( /home/ubuntu, /home/Bharath )
+
+7️⃣ /root
+Home directory of root user.
+( Example: /root )
+
+8️⃣ /lib and /lib64
+Contain shared libraries required by binaries.
+Similar to DLL files in Windows.
+
+9️⃣ /usr
+Contains user applications and utilities.
+Subdirectories:
+Directory	   Purpose
+/usr/bin	   User commands
+/usr/lib	   Libraries
+/usr/share   Shared docs/files
+( Example: ls /usr/bin 
+Contains: python, vim, git )
+
+🔟 /var
+Contains variable/changing data.
+Examples: logs, cache, spool files )
+
+1️⃣1️⃣ /tmp
+Temporary files.
+Applications store temporary data here.
+Usually cleaned automatically.
+( Example: touch /tmp/test.txt )
+
+1️⃣2️⃣ /proc
+Virtual filesystem containing process and kernel info.
+Not real files on disk.
+( Example: cat /proc/cpuinfo )
+Shows CPU information.
+
+1️⃣3️⃣ /sys
+Provides kernel and hardware information.
+Used for system tuning and device management.
+( Example: ls /sys )
+
+1️⃣4️⃣ /run
+Stores runtime process information.
+( Examples: PID files, sockets )
+Created during boot.
+
+1️⃣5️⃣ /mnt
+Temporary mount point for manually mounted filesystems.
+( Example: mount /dev/sdb1 /mnt )
+
+1️⃣6️⃣ /media  
+Mount point for removable devices.  
+( Examples: USB drives, CD-ROMs )
+
+1️⃣7️⃣ /opt
+Optional third-party software. 
+( Examples: Tomcat, custom applications Example: /opt/tomcat ) 
+
+
+1️⃣8️⃣ /srv 
+Data served by services.   
+( Examples: FTP web server data )

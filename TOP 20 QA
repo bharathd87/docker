@@ -1,0 +1,513 @@
+Top 20 Docker Interview Questions
+1. Explain Docker architecture.
+
+Expected discussion:
+
+Docker Client
+Docker Daemon (dockerd)
+Docker images
+Containers
+Docker Registry
+Docker Engine
+REST API
+
+Interview flow:
+docker CLI → Docker Daemon → Image → Container
+
+2. What is the difference between a Docker image and a container?
+Image	Container
+Read-only template	Running instance of image
+Used to create containers	Runs the application
+Immutable	Has a writable layer
+Can be stored in registry	Runs on Docker host
+
+Example:
+
+docker pull nginx
+docker run -d nginx
+3. What happens internally when you run docker run nginx?
+
+You should be able to explain:
+
+docker run nginx
+       ↓
+Docker CLI
+       ↓
+Docker daemon
+       ↓
+Check local image
+       ↓
+If not available → Pull from registry
+       ↓
+Create container
+       ↓
+Create network namespace
+       ↓
+Create writable container layer
+       ↓
+Start container process
+
+This is a very common 5-year-level question.
+
+4. Explain Dockerfile instructions.
+
+Know these very well:
+
+FROM
+RUN
+COPY
+ADD
+WORKDIR
+ENV
+ARG
+EXPOSE
+CMD
+ENTRYPOINT
+USER
+VOLUME
+
+Example:
+
+FROM nginx:alpine
+
+COPY index.html /usr/share/nginx/html/
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+5. What is the difference between CMD and ENTRYPOINT?
+
+Example:
+
+CMD ["nginx", "-g", "daemon off;"]
+
+versus
+
+ENTRYPOINT ["nginx"]
+CMD ["-g", "daemon off;"]
+
+A strong interview answer should explain:
+
+Default command
+Overriding behavior
+Combining ENTRYPOINT + CMD
+6. What is the difference between COPY and ADD?
+
+COPY:
+
+Copies files/directories into image
+Simple and preferred in most cases
+
+ADD:
+
+Can copy files
+Can extract local tar archives
+Historically supports URL sources
+
+Best practice: Prefer COPY unless you specifically need an ADD feature.
+
+7. How do you reduce Docker image size?
+
+Important 5-year question.
+
+Mention:
+
+Use Alpine/distroless images where appropriate
+Multi-stage builds
+.dockerignore
+Don't install unnecessary packages
+Combine appropriate RUN operations
+Remove package caches
+Use specific image tags
+Don't copy unnecessary files
+Keep build dependencies out of runtime image
+
+Example:
+
+FROM maven:3.9-eclipse-temurin-17 AS build
+
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn package -DskipTests
+
+FROM eclipse-temurin:17-jre
+
+COPY --from=build /app/target/app.jar /app/app.jar
+
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+8. What is a multi-stage Docker build?
+
+It allows you to separate the build environment from the runtime environment.
+
+Builder Image
+   ↓
+Compile application
+   ↓
+Generate artifact
+   ↓
+Runtime Image
+   ↓
+Copy only artifact
+
+Benefits:
+
+Smaller image
+Better security
+Faster deployment
+No build tools in production
+9. Explain Docker networking.
+
+Know these networks:
+
+docker network ls
+
+Common network types:
+
+bridge
+host
+none
+overlay
+macvlan
+
+Example:
+
+docker network create mynetwork
+
+docker run -d --name app --network mynetwork nginx
+
+Containers attached to the same Docker network can communicate using container/service names.
+
+10. How does container-to-container communication work?
+
+Suppose:
+
+frontend
+   ↓
+backend
+   ↓
+mysql
+
+Create network:
+
+docker network create app-net
+
+Run:
+
+docker run -d --name mysql --network app-net mysql
+docker run -d --name backend --network app-net backend-image
+
+Backend can connect using:
+
+mysql:3306
+
+rather than relying on the container IP.
+
+11. Explain Docker volumes. Why are they required?
+
+Containers are ephemeral.
+
+If you remove the container:
+
+docker rm container
+
+data in the container's writable layer can be lost.
+
+Use volumes:
+
+docker volume create mydata
+
+docker run -d \
+  -v mydata:/var/lib/mysql \
+  mysql
+
+Types to know:
+
+Named volumes
+Bind mounts
+tmpfs mounts
+12. What happens if a Docker container stops?
+
+By default, the container stops, but the container itself still exists.
+
+Check:
+
+docker ps -a
+
+Restart:
+
+docker start container_name
+
+For automatic restart:
+
+docker run -d --restart=always nginx
+
+Know restart policies:
+
+no
+always
+on-failure
+unless-stopped
+13. A Docker container is continuously restarting. How will you troubleshoot?
+
+This is a very important scenario question.
+
+Start with:
+
+docker ps
+
+Then:
+
+docker logs container_name
+
+Inspect:
+
+docker inspect container_name
+
+Check the process:
+
+docker top container_name
+
+Check resources:
+
+docker stats
+
+Also verify:
+
+Application error
+Wrong CMD/ENTRYPOINT
+Missing environment variables
+Missing configuration
+Port configuration
+Permission problems
+OOMKilled
+Health check failures
+Dependency/database connectivity
+14. Docker container is running, but application is not accessible. What will you check?
+
+Follow a systematic approach:
+
+docker ps
+docker logs <container>
+docker inspect <container>
+docker port <container>
+
+Then check:
+
+curl localhost:<port>
+
+Check port mapping:
+
+docker run -d -p 8080:80 nginx
+
+Meaning:
+
+Host 8080 → Container 80
+
+Then:
+
+curl http://localhost:8080
+
+Also check firewall/security-group/load-balancer rules when applicable.
+
+15. What is the difference between EXPOSE and -p?
+
+This is commonly asked.
+
+EXPOSE 80
+
+does not publish the port to the host.
+
+It documents the port the application listens on.
+
+Actual publishing:
+
+docker run -d -p 8080:80 nginx
+
+means:
+
+Host :8080
+     ↓
+Container :80
+16. How do you troubleshoot a Docker container consuming high CPU or memory?
+
+Use:
+
+docker stats
+
+Example:
+
+CONTAINER     CPU %     MEM USAGE
+app           95%       1.8GiB
+
+Then:
+
+docker top app
+docker logs app
+docker inspect app
+
+Check:
+
+Application process
+Memory leak
+Infinite loop
+Traffic increase
+Resource limits
+OOM events
+
+You can set limits:
+
+docker run -d \
+  --memory=512m \
+  --cpus=1 \
+  myapp
+17. What are Docker layers?
+
+Each applicable Dockerfile instruction creates an image layer.
+
+Example:
+
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install nginx
+COPY app /app
+
+Conceptually:
+
+Application layer
+      ↓
+COPY layer
+      ↓
+nginx installation layer
+      ↓
+apt layer
+      ↓
+Ubuntu base layer
+
+Layers enable:
+
+Caching
+Reuse
+Faster builds
+Smaller storage requirements
+18. How does Docker image caching work?
+
+Suppose:
+
+FROM node:20
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm build
+
+If application source changes, Docker can reuse the earlier layers:
+
+FROM             → CACHE
+COPY package     → CACHE
+npm install      → CACHE
+COPY source      → changed
+npm build        → rerun
+
+This is why Dockerfile instruction ordering matters.
+
+19. How do you secure Docker containers in production?
+
+For a 5-year interview, mention several areas:
+
+Use trusted/minimal base images
+Scan images using tools such as Trivy
+Don't run applications as root
+Don't store secrets in Dockerfile
+Use secrets management
+Pin/verify image versions where appropriate
+Regularly patch base images
+Remove unnecessary packages
+Use read-only filesystems where possible
+Apply CPU/memory limits
+Restrict container capabilities
+Scan images in CI/CD
+
+Example:
+
+FROM nginx:alpine
+
+RUN adduser -D appuser
+USER appuser
+20. Explain how Docker is used in a CI/CD pipeline.
+
+This is extremely important for a 5-year DevOps interview.
+
+Typical flow:
+
+Developer
+   ↓
+Git
+   ↓
+Jenkins / GitHub Actions
+   ↓
+Build Application
+   ↓
+Run Unit Tests
+   ↓
+SonarQube
+   ↓
+Docker Build
+   ↓
+Trivy Security Scan
+   ↓
+Docker Image
+   ↓
+Push to Registry
+   ↓
+Deploy
+   ↓
+Kubernetes / ECS / VM
+
+Example:
+
+docker build -t myapp:1.0 .
+docker tag myapp:1.0 registry/myapp:1.0
+docker push registry/myapp:1.0
+
+Then deployment uses:
+
+registry/myapp:1.0
+⭐ Bonus: 10 Scenario Questions You Should Also Prepare
+
+For 5 years experience, I would especially prepare these:
+
+Container is restarting continuously — how do you troubleshoot?
+Docker image is 2 GB — how will you reduce it?
+Container is consuming 100% CPU — what will you do?
+Container cannot connect to another container — troubleshoot.
+Application works locally but fails inside Docker — why?
+Docker container works with docker run but fails in Kubernetes — how troubleshoot?
+How do you pass secrets to Docker containers securely?
+How do you implement zero-downtime deployment with Docker?
+How do you clean unused Docker images/containers/volumes?
+How would you design Docker-based CI/CD for multiple microservices?
+Most important commands to know
+docker ps
+docker ps -a
+docker images
+docker pull
+docker build
+docker run
+docker exec
+docker logs
+docker inspect
+docker stop
+docker start
+docker restart
+docker rm
+docker rmi
+docker cp
+docker stats
+docker top
+docker network
+docker volume
+docker tag
+docker push
+docker login
+docker system prune
